@@ -1,21 +1,19 @@
 import 'phaser';
 import Player from './player/player';
+import Play from './scenes/play';
 
-export default class Demo extends Phaser.Scene
+export default class Menu extends Phaser.Scene
 {
-    leftKey: Phaser.Input.Keyboard.Key
-    rightKey: Phaser.Input.Keyboard.Key
-    upKey: Phaser.Input.Keyboard.Key;
-    downKey: Phaser.Input.Keyboard.Key;
-    
-    player: Player
+    startKey: Phaser.Input.Keyboard.Key
 
     screenCenterX: number
     screenCenterY: number
 
+    playScene: Phaser.Scene;
+
     constructor ()
     {
-        super('demo');
+        super('menu');
     }
 
     preload ()
@@ -42,27 +40,16 @@ export default class Demo extends Phaser.Scene
             repeat: -1
         })
 
-        this.leftKey = this.input.keyboard.addKey('A')
-        this.rightKey = this.input.keyboard.addKey('D')
-        this.upKey = this.input.keyboard.addKey('W')
-        this.downKey = this.input.keyboard.addKey('S')
-        
-        this.player = new Player(this,this.screenCenterX,this.screenCenterY)
+        this.playScene = this.game.scene.add('play', new Play(),false)
+
+        this.startKey = this.input.keyboard.addKey('Space')
         
     }
 
     update() {
-        if (this.leftKey.isDown) {
-            this.player.moveLeft()
-        }
-        if(this.rightKey.isDown) {
-            this.player.moveRight()
-        }
-        if(this.upKey.isDown){
-            this.player.moveUp()
-        }
-        if(this.downKey.isDown){
-            this.player.moveDown()
+        if (this.startKey.isDown) {
+            this.game.scene.start('play')
+            this.game.scene.stop('menu')
         }
     }
 }
@@ -72,7 +59,7 @@ const config = {
     backgroundColor: '#125555',
     width: 800,
     height: 600,
-    scene: Demo
+    scene: Menu
 };
 
 const game = new Phaser.Game(config);
